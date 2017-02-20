@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>滑动页</title>
+    <link rel="stylesheet" href="pageSlider.css">
+</head>
+<body>
+    <div class="section sec1"><span>第一页</span></div>
+    <div class="section sec2"><span>第二页</span></div>
+    <div class="section sec3"><span>第三页</span></div>
+    <div class="section sec4"><span>第四页</span></div>
+</body>
+<script src="zepto.min.js"></script>
+<script src="pageSlider.js"></script>
+<!--<script src="music.js"></script>-->
+<script>
+    $(function() {
+        var pageSlider = PageSlider.case({
+            startPage:1,//初始化显示页面
+            range:70,//可以滑动页面的需滑动距离
+            duration:200,//页面回弹动画持续的时间
+//            loop:true,//是否循环切换
+            elastic:false,//位于底部或者顶部时是否可以向上向下滑动
+            translate3d:true,//	是否使用translate3d(在支持translate3d的设备上)，
+                             // 使用translate3d会使一些设备开启GPU加速，滑动更流畅
+            callback:{
+                    1:function(){alert('滑动到了第一页');},
+                    2:function(){alert('滑动到了第二页');},
+                    3:function(){alert('滑动到了第三页');},
+                    4:function(){alert('滑动到了第四页');}
+            }//页面切换回调函数集合。该json对象每个键为一个数值，对应一个页码，
+            // 值为一个function,滑动到该页面时触发。
+            // 如上,代表滑动到每一页时将触发对应的回调函数
+        });
+        /*pageSlider.go(3);//初始化完成之后可以直接跳转到指定页面*/
+    });
+</script>
+</html>

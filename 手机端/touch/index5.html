@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>手势解锁事件</title>
+</head>
+<body>
+<div id="gesturepwd"></div>
+</body>
+<script src="jquery-2.2.0.min.js"></script>
+<script src="jquery.gesture.password.js"></script>
+<script>
+    $("#gesturepwd").GesturePasswd({
+        backgroundColor:"#252736",//背景色
+        color:"yellow",//线圈颜色
+        roundRadii:25,//大圆半径
+        pointRadii:5,//小圆半径
+        space:30,//线圈之间的间隔
+        width:240,//整个容器的宽度
+        height:240,//整个容器的高度
+        lineColor:"#00aec7",//线条划过的颜色
+        zIndex :100//整个层级
+     });
+    $("#gesturepwd").on("hasPasswd",function(e,passwd){//passed为用户所输入的密码，进行处理，加密后交给后端验证等。。。
+        var result=passwd; //用户密码对或错
+        console.log(result);
+        if(result == 5687){
+            $("#gesturepwd").trigger("passwdRight");
+            setTimeout(function(){//密码验证正确后的其他操作，打开新的页面等。。。
+                alert("密码输入正确")
+            },500);//延迟半秒以照顾视觉效果
+        }else{
+            $("#gesturepwd").trigger("passwdWrong");//密码验证错误后的其他操作。。。
+        }
+    });
+</script>
+</html>

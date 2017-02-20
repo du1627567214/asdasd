@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>左右滑动事件</title>
+    <style>
+        html,body{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #999;
+            font-family:"微软雅黑";
+        }
+        .box-main{
+            text-align: center;
+            font-size:15px;
+            color: #eee;
+            line-height: 15px;
+        }
+        .box{
+            width: 100%;
+            height:100%;
+            position: absolute;
+            top:0;
+            background: #333;
+            overflow: hidden;
+        }
+        .navList{
+            width: 200%;
+            height:200px;
+            position: absolute;
+            left: 0;
+        }
+        header{
+            line-height:40px;
+            background: #000;
+            -webkit-box-shadow: 0 5px 5px red;
+            z-index: 1000;
+        }
+        .nav{
+            width: 25%;
+            height:100px;
+            background: #eee;
+            color: #222;
+            font-size:25px;
+            line-height:100px;
+            border: 5px solid #E0E0E0;
+            -webkit-box-sizing: border-box;
+            float: left;
+        }
+        .tap-box{
+            width: 100%;
+            height:50px;
+            background: #000;
+            line-height: 50px;
+            border-bottom: 2px solid #333333;
+        }
+        .tap-margin{margin-top: 200px}
+    </style>
+</head>
+<body>
+<div class="box-main">
+    <span>下拉立即刷新...</span>
+    <div class="box">
+        <header>头部</header>
+        <div class="navList">
+            <div class="nav"><a href="index3.html">栏目一</a></div>
+            <div class="nav">栏目二</div>
+            <div class="nav">栏目五</div>
+            <div class="nav">栏目六</div>
+            <div class="nav">栏目三</div>
+            <div class="nav">栏目四</div>
+            <div class="nav">栏目七</div>
+            <div class="nav">栏目八</div>
+        </div>
+        <div class="tap-box tap-margin">
+            <div class="tap1">双击//长按</div>
+        </div>
+        <div class="tap-box swipe">
+            <div class="tap1">滑动</div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="zepto.min.js"></script>
+<script src="touch.js"></script>
+<script>
+/*    //下拉刷新
+    var init=null,newInit=null;
+    $(".box").on("touchstart",function (event) {
+        init=null;newInit=null;
+//        event.targetTouches.length//判断元素上面的手指数
+//        event.preventDefault();
+        $(".box,.box-main span:first-child").css("-webkit-transition",null);
+        init=event.touches[0].pageY;
+    });
+    $(".box").on("touchmove",function (event) {
+//        event.preventDefault();
+        newInit=event.touches[0].pageY - init;
+        if(newInit > 0 && newInit <= 90){
+            $(this).css( "top",newInit);
+            if(newInit > 15)  $(".box-main span:first-child").css("line-height",((newInit-40)*2+40)+"px");
+            if(newInit > 50)  $(".box-main span:first-child").text("释放立即刷新...");
+            if(newInit > 90)  $(this).css( "top",90);
+        }
+    });
+    $(".box").on("touchend",function (event) {
+//        event.preventDefault();
+        if(newInit > 50){
+            $(".box").css({
+                "top":50,
+                "-webkit-transition":"all .15s linear"
+            });
+            $(".box-main span:first-child").css({
+                "line-height":50+"px",
+                "-webkit-transition":"all .15s linear"
+            });
+            $(".box-main span:first-child").text("正在刷新...");
+            setTimeout(exit,500);
+        }else if(newInit > 0 && newInit < 50){
+            $(".box").css({
+                "top":0,
+                "-webkit-transition":"all .15s linear"
+            });
+            setTimeout(exit,0);
+        }
+
+    });
+    function exit() {
+        $(".box").css("top",0);
+        $(".box-main span:first-child").text("下拉立即刷新...");
+        $(".box-main span:first-child").css("line-height",15+"px");
+    }
+//nav左右滑动
+    var init1=null,newInit1=null;
+    $(".navList").on("touchstart",function (event) {
+//        event.preventDefault();
+        init1=null;newInit1=null;
+        $(".navList").css("-webkit-transition","all .3s linear");
+        init1=event.touches[0].clientX;
+    });
+    $(".navList").on("touchmove",function (event) {
+      event.preventDefault();
+        newInit1=event.touches[0].clientX - init1;
+        $(this).css("left",parseInt($(this).css("left").replace(/px/,""))+parseInt(newInit1));
+        if($(this).css("left").replace(/px/,"")>0)
+        $(this).css("left",0);
+        else if($(this).css("left").replace(/px/,"")<-document.documentElement.clientWidth)
+        $(this).css("left",-document.documentElement.clientWidth+"px")
+    });
+    $(".navList").on("touchend",function (event) {
+//        event.preventDefault();
+        $(".navList").css("-webkit-transition","all .3s linear");
+        var lang=$(this).css("left").replace(/px/,"");
+        if(-lang >= document.documentElement.clientWidth/3)
+            $(this).css("left",-document.documentElement.clientWidth);
+        else if(-lang <= document.documentElement.clientWidth/3)
+            $(this).css("left",0);
+        else if(-lang >= document.documentElement.clientWidth/2)
+            $(this).css("left",-document.documentElement.clientWidth);
+    });*/
+Zepto(function($) {
+    var leftInit = null, topInit = null, leftNew = null, topNew = null;
+    $(document).on("touchstart", function (event) {
+//        event.preventDefault();
+        leftInit = null, topInit = null, leftNew = null, topNew = null;
+        leftInit = event.touches[0].pageX;
+        topInit = event.touches[0].pageY;
+        $(".navList").css("-webkit-transition", "all .3s linear");
+        $(".box,.box-main span:first-child").css("-webkit-transition", null);
+        console.log(leftInit, topInit)
+    });
+    $(document).on("touchmove", function (event) {
+        event.preventDefault();
+        leftNew = event.touches[0].pageX - leftInit;
+        topNew = event.touches[0].pageY - topInit;
+//        console.log(event.touches[0]);
+        if (event.touches[0].target.className == "nav" && Math.abs(leftNew) > Math.abs(topNew) && $(".box").css("top") == 0 + "px") {
+            $(".navList").css("left", parseInt($(".navList").css("left").replace(/px/, "")) + parseInt(leftNew));
+            if ($(".navList").css("left").replace(/px/, "") > 0)
+                $(".navList").css("left", 0);
+            else if ($(".navList").css("left").replace(/px/, "") < -document.documentElement.clientWidth)
+                $(".navList").css("left", -document.documentElement.clientWidth + "px")
+        } else if (Math.abs(leftNew) < Math.abs(topNew) && ($(".navList").css("left") == 0 + "px" || $(".navList").css("left") == -document.documentElement.clientWidth + "px")) {
+            if (topNew > 0 && topNew <= 90) {
+                $(".box").css("top", topNew);
+                if (topNew > 15)  $(".box-main span:first-child").css("line-height", ((topNew - 40) * 2 + 40) + "px");
+                if (topNew > 50)  $(".box-main span:first-child").html("释放立即刷新...");
+                if (topNew > 90)  $(".box").css("top", 90);
+            }
+        }
+    });
+    $(document).on("touchend", function (event) {
+        if (topNew > 50) {
+            $(".box").css({
+                "top": 50,
+                "-webkit-transition": "all .15s linear"
+            });
+            $(".box-main span:first-child").css({
+                "line-height": 50 + "px",
+                "-webkit-transition": "all .15s linear"
+            });
+            $(".box-main span:first-child").text("正在刷新...");
+            setTimeout(exit, 500);
+        } else if (topNew > 0 && topNew < 50) {
+            $(".box").css({
+                "top": 0,
+                "-webkit-transition": "all .15s linear"
+            });
+            setTimeout(exit, 0);
+        }
+        $(".navList").css("-webkit-transition", "all .3s linear");
+        var lang = $(".navList").css("left").replace(/px/, "");
+        if (-lang >= document.documentElement.clientWidth / 3)
+            $(".navList").css("left", -document.documentElement.clientWidth);
+        else if (-lang <= document.documentElement.clientWidth / 3)
+            $(".navList").css("left", 0);
+        else if (-lang >= document.documentElement.clientWidth / 2)
+            $(".navList").css("left", -document.documentElement.clientWidth);
+    });
+    function exit() {
+        $(".box").css("top", 0);
+        $(".box-main span:first-child").text("下拉立即刷新...");
+        $(".box-main span:first-child").css("line-height", 15 + "px");
+    }
+
+    /*$(".tap1").tap(function (event) {
+        event.preventDefault();
+        alert("你单击了我")
+    })*/
+    $(".tap1").doubleTap(function (event) {
+        event.preventDefault();
+        alert("你双击了我")
+    });
+    $(".tap1").longTap(function (event) {
+        event.preventDefault();
+        alert("你一直按着我")
+    });
+    $('.swipe').swipeLeft(function(event){
+        event.preventDefault();
+//        alert("你在我上面滑动了")
+        $(this).css("margin-left","-20px");
+    });
+    $('.swipe').swipeRight(function(event){
+        event.preventDefault();
+//        alert("你在我上面滑动了")
+        $(this).css("margin-left","0");
+    });
+})
+</script>
+</html>

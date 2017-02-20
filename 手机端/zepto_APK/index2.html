@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>手机触摸事件</title>
+</head>
+<style>
+    html,body,ul,li,ol,img{
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        border: none;
+    }
+    html,body{
+        width: 100%;
+        height:100%;
+        overflow: hidden;
+    }
+    .body{
+        width: 100%;
+        height:100%;
+        background: #eee;
+    }
+    #main{
+        width: 100%;
+        height:100%;
+        background: red;
+        position: absolute;
+        top:0;
+        left: 0;
+        z-index:1000;
+        /*transition: all .3s linear;*/
+    }
+    .left{
+        width: 50%;
+        height:100%;
+        background: #eee;
+        position: absolute;
+        z-index:100;
+    }
+</style>
+<body>
+<div class="body">
+    <div class="left">拉出来的div</div>
+    <div id="main">body内容</div>
+</div>
+</body>
+<script>
+    var el = document.getElementById("main");
+    el.addEventListener("touchstart", handleStart, false);
+    el.addEventListener("touchmove", handleMove, false);
+    el.addEventListener("touchend", handleEnd, true);
+    var left=null;
+    function handleStart(evt) {
+        // 阻止浏览器继续处理触摸事件，
+        // 也阻止发出鼠标事件
+        evt.preventDefault();
+        left=evt.touches.item(0).pageX;
+        console.log(evt.target);
+    }
+
+    function handleMove(evt){
+        evt.preventDefault();
+        console.log(evt.touches.item(0).pageX-left);
+//        console.log(evt.touches.item(0).pageY);
+        evt.target.style.left=(evt.touches.item(0).pageX-left)+"px";
+        if((evt.touches.item(0).pageX-left)>=(window.screen.width/2)){
+            evt.target.style.left=(window.screen.width/2)+"px";
+        }
+        if((evt.touches.item(0).pageX-left)>=0){
+            evt.target.style.boxShadow="-10px 0 5px #999";
+        }else{
+            evt.target.style.left=0;
+        }
+    }
+    function handleEnd(evt) {
+        evt.preventDefault();
+        console.log((window.screen.width/4));
+        if(parseInt(evt.target.style.left.split("px")[0])>(window.screen.width/4)){
+            evt.target.style.left=(window.screen.width/2)+"px";
+            console.log("awd");
+        }else{
+            evt.target.style.left=0;
+        }
+    }
+    var a="0x100px";
+    console.log(parseInt(a));
+</script>
+</html>

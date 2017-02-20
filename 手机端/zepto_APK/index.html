@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>Title</title>
+    <style>
+        html,body,ul,li,ol,img,a{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-decoration: none;
+        }
+        html,body{
+            width: 100%;
+            height:100%;
+        }
+        .main{
+            width: 100%;
+            height:100%;
+            background:green;
+            position: absolute;
+            left: 0;
+            top:0;
+        }
+        .div1{
+            width: 100px;
+            height:100px;
+            background: red;
+            position:absolute;
+            left: 0;
+        }
+        #div1{top:30px}
+        #tap{top:130px}
+        #touch{top:230px}
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div id="div1" class="div1">touch</div>
+        <div class="div1" id="tap">tap</div>
+        <div class="div1" id="touch">swipe</div>
+        <span id="text">awd</span>
+        <a href="index4.html">跳转到3</a>
+    </div>
+</body>
+<script src="zepto.min.js"></script>
+<script src="touch.js"></script>
+<script>
+// 当页面ready的时候，执行回调:
+    Zepto(function($){
+        console.log($("div[class='div1']").get(0));
+        $("body").append($("<p/>", { text:"Hello", id:"greeting", css:{color:'red',backgroundColor:'darkblue'} }));
+        //将一组字符串变成“骆驼”命名法的新字符串，如果该字符已经是“骆驼”命名法，则不变化。
+        console.log($.camelCase('hello-there'));
+        console.log($.camelCase('helloThere'));
+        //检查父节点是否包含给定的dom节点，如果两者是相同的节点，则返回 false
+//        console.log($.contains($("#div1"),$("#div1")));
+        //遍历数组元素或以key-value值对方式遍历对象。回调函数返回 false 时停止遍历。
+        $.each(['a', 'b', 'c'], function(index, item){
+            console.log('item %d is: %s', index, item)
+        });
+        var hash = { name: 'zepto.js', size: 'micro' };
+        $.each(hash, function(key, value){
+            console.log('%s: %s', key, value)
+        });
+        //通过源对象扩展目标对象的属性，源对象属性将覆盖目标对象属性。
+        //默认情况下为，复制为浅拷贝（浅复制）。如果第一个参数为true表示深度拷贝（深度复制）。
+        var target = { one: 'one1' },source = { two: 'two1' },source1 = { three: 'three1' };
+        console.log($.extend(true,target, source, source1));
+        /*$.fn.empty = function(){
+            return this.each(function(){ this.innerHTML = '' })
+        }*/
+        //获取一个新数组，新数组只包含回调函数中返回 true 的数组项。
+        console.log($.grep([1,2,3],function(item){
+            return item > 1
+        }));
+var left=null;
+        $('.main').on("touchstart",function(event){
+//            event.preventDefault();
+            event.stopPropagation();
+            console.log("开始按下");
+            console.log(event.touches[0]);
+            left=event.touches[0].pageX;
+            $(this).css("transition",null);
+        });
+        $('.main').on("touchmove",function(event){
+//            event.preventDefault();
+            event.stopPropagation();
+            console.log("正在移动");
+            $(this).css("left",(event.touches[0].pageX-left)+"px");
+            console.log(event.touches[0])
+        });
+        $('.main').on("touchend",function(event){
+//            event.preventDefault();
+            event.stopPropagation();
+            $(this).css({"left":0,
+                "transition":"all .3s linear"
+            });
+            console.log("手指拿起")
+        });
+        $('.main').on("touchcancel",function(){
+            console.log("系统取消touch事件");
+        });
+        $('#div1').on("touchstart",function(event){
+//            event.preventDefault();
+            event.stopPropagation();
+            console.log("开始按下");
+            console.log(event.touches[0]);
+            left=event.touches[0].pageX;
+            $(this).css("transition",null);
+        });
+        $('#div1').on("touchmove",function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            console.log("正在移动");
+            $(this).css("left",(event.touches[0].pageX-left)+"px");
+            console.log(event.touches[0])
+        });
+        $('#div1').on("touchend",function(event){
+//            event.preventDefault();
+            event.stopPropagation();
+            $(this).css({"left":0,
+                "transition":"all .3s linear"
+            });
+            console.log("手指拿起")
+        });
+        $('#div1').on("touchcancel",function(){
+            console.log("系统取消touch事件");
+        });
+        $('#tap').tap(function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            $("#text").text("你单击了我");
+        });
+        /*$('#tap').singleTap(function(){
+            console.log("你单击了我")
+        });*/
+        $('#tap').doubleTap(function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            $("#text").text("你双击了我");
+        });
+        $('#tap').longTap(function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            $("#text").text("不要一直按着我");
+        });
+        $('#touch').swipe(function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            $("#text").text("你在我上面滑动了");
+        });
+    })
+</script>
+</html>
